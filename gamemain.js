@@ -53,7 +53,7 @@ const settings =
     extractCount:20,
 
     // 総問題数
-    allQuestionCount : 10,
+    allQuestionCount : 15,
 
     // クリアとする正解数  allQuestionCount >= clearCountであること
     clearCount : 10,
