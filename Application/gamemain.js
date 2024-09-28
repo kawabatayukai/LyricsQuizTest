@@ -5,6 +5,15 @@ const jsonPath =
     yonezu : "resources/output_12795_yunezu.json"
 }
 
+// 効果音
+const sounds = 
+{
+    correct : "resources/sounds/Correct.mp3",
+    wrong : "resources/sounds/Wrong.mp3"
+}
+// 効果音を使用するか
+let useSounds = true;
+
 // 読み込んだデータ
 let originData = [];
 
@@ -176,11 +185,13 @@ function ResponseToConfirm()
             // 正解数の加算
             questionCounter.correctCount ++;
             SetCorrectCounterText();
+            PlaySound(sounds.correct);
         }
         else
         {
             // 不正解
             SetResultText(resultTexts.wrong);
+            PlaySound(sounds.wrong);
         }
         
         // ボタンの機能を"Next"に
@@ -357,4 +368,12 @@ function ExtractSubString(str, beginIndex = 0, extractCount = 1)
 function GetRandomNumber(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// 効果音再生
+function PlaySound(sound)
+{
+    if(!sound) { return; }
+
+    new Audio(sound).play();
 }
