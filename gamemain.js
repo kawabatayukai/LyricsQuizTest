@@ -8,7 +8,7 @@ const jsonPath =
 // 効果音
 const sounds = 
 {
-    correct : "Correct.mp3",
+    correct : "https://kawabatayukai.github.io/LyricsQuizTest/Correct.mp3",
     wrong : "Wrong.mp3"
 }
 // 効果音を使用するか
