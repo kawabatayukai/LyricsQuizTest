@@ -8,8 +8,8 @@ const jsonPath =
 // 効果音
 const sounds = 
 {
-    correct : "resources/sounds/Correct.mp3",
-    wrong : "resources/sounds/Wrong.mp3"
+    correct : "resources/Correct.mp3",
+    wrong : "resources/Wrong.mp3"
 }
 // 効果音を使用するか
 let useSounds = true;
