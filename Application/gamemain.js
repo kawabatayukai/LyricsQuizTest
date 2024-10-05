@@ -5,14 +5,6 @@ const jsonPath =
     yonezu : "resources/output_12795_yunezu.json"
 }
 
-// 効果音
-const sounds = 
-{
-    correct : "https://kawabatayukai.github.io/LyricsQuizTest/Correct.mp3",
-    wrong : "Wrong.mp3"
-}
-// 効果音を使用するか
-let useSounds = true;
 
 // 読み込んだデータ
 let originData = [];
@@ -47,12 +39,43 @@ let currentQuestion =
     correctIndex : 0
 }
 
+// 問題数管理
 let questionCounter =
 {
     questionCount : 0,
     correctCount : 0
 }
 
+// 時間計測
+class TimeCounter
+{
+    constructor()
+    {
+        // 総解答時間
+        this.totalTime = 0;
+
+        // 現在の問題を開始した時間
+        this.currentStartTime = 0;
+
+        // ひとつ前の問題の解答時間
+        this.resultTime = 0;
+    }
+
+    // カウント開始
+    countStart() 
+    {
+        this.currentStartTime = Date.now();
+    }
+
+    // カウント停止
+    countStop()
+    {
+        const stopTime = Date.now();
+        this.resultTime = (stopTime - this.currentStartTime) / 1000;
+        this.totalTime += this.resultTime;
+    }
+}
+const timeCounter = new TimeCounter();
 
 // 設定 
 // TODO: startページから設定させる
@@ -171,6 +194,9 @@ function onClicked_confirmButton()
 // "OK"選択時の応答
 function ResponseToConfirm()
 {
+    // 時間計測停止
+    timeCounter.countStop();
+
     // 選択されたボタンを取得
     const selectedAnswer = document.querySelector('input[name="selectedAnswer"]:checked');
 
@@ -185,13 +211,11 @@ function ResponseToConfirm()
             // 正解数の加算
             questionCounter.correctCount ++;
             SetCorrectCounterText();
-            PlaySound(sounds.correct);
         }
         else
         {
             // 不正解
             SetResultText(resultTexts.wrong);
-            PlaySound(sounds.wrong);
         }
         
         // ボタンの機能を"Next"に
@@ -201,10 +225,24 @@ function ResponseToConfirm()
         questionCounter.questionCount++;
 
         // 終了
-        if (questionCounter.correctCount >= settings.allQuestionCount)
+        if (questionCounter.questionCount >= settings.allQuestionCount)
         {
-            alert("ALL CLEAR!");
-            // TODO: リザルト画面へ
+            // 正解数・問題数を渡す
+            // TODO: 平均時間, アーティスト名
+            const resultParameter = 
+            {
+                allQuestionCount : settings.allQuestionCount,
+                correctCount : questionCounter.correctCount,
+                time : Math.round(timeCounter.totalTime * 100)/100,
+                // 平均 : 四捨五入, 小数第一位
+                avarage : Math.round((timeCounter.totalTime/settings.allQuestionCount) * 100)/100,
+            };
+
+            // セッションストレージに保存
+            sessionStorage.setItem("resultParameter", JSON.stringify(resultParameter));
+
+            // リザルト画面へ
+            window.location.href = `result.html`;           
         }
     }
     else
@@ -244,6 +282,12 @@ function SetResultText(result)
     resultText.style.color = result.color;
 }
 
+// 解答時間テキストセット
+function SetAnswerTimeText()
+{
+
+}
+
 // ラジオボタンのチェックをすべて外す
 function ClearRadioButtons()
 {
@@ -263,6 +307,8 @@ function NextQuestion()
     ApplyQuestion();
     SetResultText(resultTexts.select);
     SetCorrectCounterText();
+    // 時間計測開始
+    timeCounter.countStart();
 }
 
 // 問題反映
@@ -368,12 +414,4 @@ function ExtractSubString(str, beginIndex = 0, extractCount = 1)
 function GetRandomNumber(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// 効果音再生
-function PlaySound(sound)
-{
-    if(!sound) { return; }
-
-    new Audio(sound).play();
 }
