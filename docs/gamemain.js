@@ -268,8 +268,8 @@ function ConfirmButtonMode(mode)
 function SetCorrectCounterText()
 {
     correctCounter.textContent = (
-        "Correct : " + 
-        questionCounter.correctCount.toString() + 
+        "Question : " + 
+        questionCounter.questionCount.toString() + 
         " / " +
         settings.allQuestionCount.toString()
     );
