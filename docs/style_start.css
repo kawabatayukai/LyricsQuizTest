@@ -11,6 +11,12 @@ main{
     padding: 0px 10px 10px 10px;
 }
 
+#questionSettings{
+    border-style: solid;
+    border-radius: 5px;
+    padding: 0px 10px 0px 10px;
+}
+
 /* 解答群 */
 #answerGroup{
     color: white;
@@ -67,4 +73,9 @@ main{
 }
 #startButtonArea{
     text-align: center;
+}
+
+#test{
+    font-size: small;
+    line-height: 3px;
 }

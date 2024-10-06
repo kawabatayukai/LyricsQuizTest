@@ -11,6 +11,13 @@
     <main>
         <h1>Lyrics Guess Quiz Test</h1>
 
+        <!-- 問題数設定 -->
+        <div id="questionSettings">
+            <p class="settingContent" id="questionCountText">問題数 : 10</p>
+            <input type="range" id="questionSlider" min="1" max="1" value="1">
+            <span class="sliderLabel", id="maxValue">1</span>
+        </div>
+
         <!-- 解答選択肢 -->
         <div id="answerGroup">
             <h3>Select an artist. アーティストを選択</h3>
@@ -34,6 +41,12 @@
             <button type="button" id="startButton">START</button>
         </div>
     </main>
-
+    <!--テスト表示 -->
+    <div id="test">
+        <p>-- 問題数設定について --</p>
+        <p>実装途中です。</p>
+        <p>"ベストアルバム"なども含んでいるので, 同じ曲が複数回出題される場合があります。</p>
+        <p>スピッツ "チェリー", "空も飛べるはず"など,ヒット曲は2~3回出題されるかもしれません</p>
+    </div>   
 </body>
 </html>

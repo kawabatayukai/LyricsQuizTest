@@ -1,10 +1,9 @@
 // jsonへのパス
 const jsonPath = 
 {
-    spitz : "resources/output.json",
-    yonezu : "resources/output_12795_yunezu.json"
+    spitz : "resources/origin1475_spitz.json",
+    yonezu : "resources/origin12795_yunezu.json"
 }
-
 
 // 読み込んだデータ
 let originData = [];
@@ -79,7 +78,7 @@ const timeCounter = new TimeCounter();
 
 // 設定 
 // TODO: startページから設定させる
-const settings =
+let settings =
 {
     // 抽出設定
     extractCount:20,
@@ -111,16 +110,8 @@ const resultTexts =
     }
 }
 
-// 遷移時の値受け渡し取得
-function GetQueryParameter()
+function GetCurrentJson(artistNum)
 {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("artist");
-}
-
-function GetCurrentJson()
-{
-    const artistNum = GetQueryParameter();
     switch (artistNum)
     {
         case "artist0":
@@ -133,12 +124,29 @@ function GetCurrentJson()
     return "";
 }
 
+// ページ遷移時のデータを取得
+function GetGameParameter()
+{
+    const data = sessionStorage.getItem("gameParameter");
+    sessionStorage.clear();
+    if(data)
+    {
+        return JSON.parse(data);
+    }
+    
+    // 取れないときは空を返す
+    return {artistID:"artist0", questionCount:1}
+}
 
 // ページ読み込み時にjsonロード
 window.onload = async function ()
 {
+    const param = GetGameParameter();
 
-    await LoadJson(GetCurrentJson());
+    await LoadJson(GetCurrentJson(param.artistID));
+
+    // 総問題数をスタート画面で設定したものに
+    settings.allQuestionCount = param.questionCount;
 
     // 正解数
     correctCounter = document.getElementById("correctCounter");
