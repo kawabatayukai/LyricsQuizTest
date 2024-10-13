@@ -27,6 +27,35 @@ const confirmButtonModes =
     next : "NEXT"
 }
 
+// answerLabelsカラー
+const answerButtonStyles = 
+{
+    // 通常
+    normal : 
+    {
+        background : "mintcream",
+        border     : "turquoise",
+    },
+    // 正解
+    correct : 
+    {
+        background : "palegreen",
+        border     : "limegreen",
+    },
+    // 間違い
+    wrong : 
+    {
+        background : "lightpink",
+        border     : "red",
+    },
+    // cssを優先
+    useCSS : 
+    {
+        background : "",
+        border : "" 
+    }
+}
+
 // 現在使用中の問題データ (構造体のように型定義したい!)
 // question : 抽出した歌詞データ
 // answers : 解答選択肢
@@ -197,6 +226,8 @@ function onClicked_confirmButton()
     }
 
     NextQuestion();
+    // スタイルリセット
+    ResetAnswerLabelStyles();
 }
 
 // "OK"選択時の応答
@@ -210,20 +241,31 @@ function ResponseToConfirm()
 
     if(selectedAnswer)
     {
-        const selectedId = selectedAnswer.id;
+        const selectedIndex = parseInt(selectedAnswer.id.replace("button", ""));
 
-        if(selectedId === ("button" + currentQuestion.correctIndex.toString()))
+        // 選択肢のスタイルを全てリセット
+        ResetAnswerLabelStyles();
+
+        if(selectedIndex === currentQuestion.correctIndex)
         {
             // 正解
             SetResultText(resultTexts.correct);
             // 正解数の加算
             questionCounter.correctCount ++;
             SetCorrectCounterText();
+            
+            // 選択肢のスタイルを"正解"に
+            SetAnswerLabelStyle(answerLabels[selectedIndex], answerButtonStyles.correct);
         }
         else
         {
             // 不正解
             SetResultText(resultTexts.wrong);
+
+            // 解答した選択肢のスタイルを"不正解"に
+            SetAnswerLabelStyle(answerLabels[selectedIndex], answerButtonStyles.wrong);
+            // 選択肢のスタイルを"正解"に
+            SetAnswerLabelStyle(answerLabels[currentQuestion.correctIndex], answerButtonStyles.correct);
         }
         
         // ボタンの機能を"Next"に
@@ -294,6 +336,22 @@ function SetResultText(result)
 function SetAnswerTimeText()
 {
 
+}
+
+// 選択肢スタイルセット
+function SetAnswerLabelStyle(label, style)
+{
+    label.style.backgroundColor = style.background;
+    label.style.borderColor = style.border;
+}
+
+// 全選択肢スタイルリセット
+function ResetAnswerLabelStyles()
+{
+    for (const label of answerLabels)
+    {
+        SetAnswerLabelStyle(label, answerButtonStyles.useCSS);
+    }
 }
 
 // ラジオボタンのチェックをすべて外す
